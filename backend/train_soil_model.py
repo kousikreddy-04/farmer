@@ -5,7 +5,7 @@ from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropou
 import os
 
 # Paths
-DATA_DIR = r"C:\Users\kousi\Downloads\Soil Test\Soil Test"
+DATA_DIR = r"D:\farmers\backend\datasets\Soil Test"
 MODEL_PATH = "backend/models/soil_model.h5"
 IMG_SIZE = (150, 150)
 BATCH_SIZE = 32

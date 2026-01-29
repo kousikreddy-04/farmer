@@ -7,7 +7,7 @@ from sklearn.metrics import accuracy_score
 import os
 
 # Paths (Adjusted for Windows)
-DATA_PATH = r"C:\Users\kousi\Downloads\Soil Test"
+DATA_PATH = r"D:\farmers\backend\datasets"
 CROP_CSV = os.path.join(DATA_PATH, "Crop_recommendation.csv")
 DATA_CORE_CSV = os.path.join(DATA_PATH, "data_core.csv")
 MODEL_PATH = "backend/models"
