@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Intelligence Dashboard</title>
+    <!-- Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="logo-icon">
+            <i class="fa-solid fa-leaf fa-lg"></i>
+        </div>
+
+        <div class="nav-item active">
+            <i class="fa-solid fa-chart-line fa-lg"></i>
+            <span class="nav-label">Analysis</span>
+        </div>
+        <div class="nav-item">
+            <i class="fa-solid fa-clock-rotate-left fa-lg"></i>
+            <span class="nav-label">History</span>
+        </div>
+        <div class="nav-item">
+            <i class="fa-solid fa-cloud-sun fa-lg"></i>
+            <span class="nav-label">Weather</span>
+        </div>
+        <div class="nav-item" style="margin-top: auto;">
+            <i class="fa-solid fa-gear fa-lg"></i>
+            <span class="nav-label">Settings</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header>
+            <div class="page-title">
+                <h1>Crop Intelligence</h1>
+                <p>AI-Powered Agriculture Decisions</p>
+            </div>
+            <div class="profile-actions">
+                <div class="icon-btn">
+                    <i class="fa-regular fa-bell"></i>
+                </div>
+                <div class="icon-btn" style="background-color: var(--light-green);">
+                    <i class="fa-solid fa-leaf"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Tabs -->
+        <div class="tabs-container">
+            <div class="tab active">Easy</div>
+            <div class="tab">Advanced</div>
+            <div class="tab">Smart</div>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Left Panel: Inputs -->
+            <div class="card input-card">
+                <div class="section-header">
+                    <i class="fa-solid fa-sliders"></i>
+                    <span>Environmental Parameters</span>
+                </div>
+
+                <!-- Toggle for Photo vs Manual -->
+                <div style="margin-bottom: 20px; display: flex; gap: 10px;">
+                    <button class="action-btn upload-btn" onclick="document.getElementById('soilImage').click()"
+                        style="margin:0; font-size: 14px; padding: 10px;">
+                        <i class="fa-solid fa-camera"></i> Upload Soil Photo
+                    </button>
+                    <input type="file" id="soilImage" class="file-input" accept="image/*"
+                        onchange="handleImageUpload(this)">
+                    <span id="fileName" style="font-size: 12px; color: #666; align-self: center;">No file chosen</span>
+                </div>
+
+                <div class="slider-group">
+                    <div class="slider-label">
+                        <span>NITROGEN (N)</span>
+                        <span class="slider-value" id="val-n">50</span>
+                    </div>
+                    <input type="range" min="0" max="140" value="50" class="range-slider" id="slider-n"
+                        oninput="updateVal('n', this.value)">
+                </div>
+
+                <div class="slider-group">
+                    <div class="slider-label">
+                        <span>PHOSPHORUS (P)</span>
+                        <span class="slider-value" id="val-p">40</span>
+                    </div>
+                    <input type="range" min="0" max="140" value="40" class="range-slider" id="slider-p"
+                        oninput="updateVal('p', this.value)">
+                </div>
+
+                <div class="slider-group">
+                    <div class="slider-label">
+                        <span>POTASSIUM (K)</span>
+                        <span class="slider-value" id="val-k">40</span>
+                    </div>
+                    <input type="range" min="0" max="140" value="40" class="range-slider" id="slider-k"
+                        oninput="updateVal('k', this.value)">
+                </div>
+
+                <button class="action-btn" onclick="runAnalysis()">
+                    <i class="fa-solid fa-bolt"></i>
+                    Run AI Analysis
+                </button>
+            </div>
+
+            <!-- Right Panel: Results -->
+            <div class="card result-card" id="result-panel">
+
+                <!-- Initial State -->
+                <div id="initial-state">
+                    <div class="placeholder-icon">
+                        <i class="fa-solid fa-chart-simple fa-2x" style="color: #d1d5db;"></i>
+                    </div>
+                    <div class="placeholder-text">
+                        <h3>Ready for Recommendation</h3>
+                        <p>Fill the parameters or scan your soil to get started</p>
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div id="loading-state" style="display: none;">
+                    <i class="fa-solid fa-circle-notch fa-spin fa-3x" style="color: var(--secondary-green);"></i>
+                    <p style="margin-top: 20px; color: var(--text-muted);">Analyzing satellite & soil data...</p>
+                </div>
+
+                <!-- Result State -->
+                <div id="result-state" class="active-result">
+                    <span class="result-badge">✨ AI RECOMMENDATION</span>
+                    <h1 class="crop-display" id="rec-crop">--</h1>
+                    <p class="confidence-bar">Confidence Score: <strong id="rec-conf">--%</strong></p>
+
+                    <div class="reasons-box">
+                        <h4 style="margin-bottom: 10px; color: var(--text-dark);">Why this crop?</h4>
+                        <ul id="rec-list" style="list-style-position: inside; color: #4b5563; line-height: 1.6;">
+                            <!-- reasons loaded here -->
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Floating Action Button (Decorative) -->
+        <div class="fab">
+            <i class="fa-solid fa-grip-dots"></i>
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <i class="fa-solid fa-expand"></i>
+        </div>
+
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        function updateVal(id, val) {
+            document.getElementById(`val-${id}`).innerText = val;
+        }
+
+        function handleImageUpload(input) {
+            if (input.files && input.files[0]) {
+                document.getElementById('fileName').innerText = "📷 " + input.files[0].name;
+            }
+        }
+
+        async function runAnalysis() {
+            // UI Transition
+            document.getElementById('initial-state').style.display = 'none';
+            document.getElementById('result-state').style.display = 'none';
+            document.getElementById('loading-state').style.display = 'block';
+
+            // Gather Data
+            const n = document.getElementById('slider-n').value;
+            const p = document.getElementById('slider-p').value;
+            const k = document.getElementById('slider-k').value;
+            const fileInput = document.getElementById('soilImage');
+
+            // Construct Payload
+            let payload = {
+                lat: 20.59, // Default/Mock for Web if not asking permissions immediately
+                lon: 78.96,
+                N: n, P: p, K: k
+            };
+
+            // If image is present, convert to base64
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onloadend = async function () {
+                    payload.image_base64 = reader.result.split(',')[1];
+                    sendRequest(payload);
+                }
+            } else {
+                sendRequest(payload);
+            }
+        }
+
+        async function sendRequest(payload) {
+            try {
+                const response = await fetch('http://localhost:5000/recommend_hybrid', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+
+                // Update UI
+                document.getElementById('loading-state').style.display = 'none';
+                const resultDiv = document.getElementById('result-state');
+                resultDiv.style.display = 'flex'; // Flex to center content
+
+                document.getElementById('rec-crop').innerText = data.recommended_crop;
+                document.getElementById('rec-conf').innerText = (data.confidence * 100).toFixed(0) + "%";
+
+                const list = document.getElementById('rec-list');
+                list.innerHTML = "";
+                data.explanation.bullet_points.forEach(pt => {
+                    const li = document.createElement('li');
+                    li.innerText = pt;
+                    list.appendChild(li);
+                });
+
+            } catch (e) {
+                alert("Error connecting to AI: " + e.message);
+                document.getElementById('loading-state').style.display = 'none';
+                document.getElementById('initial-state').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+
+</html>

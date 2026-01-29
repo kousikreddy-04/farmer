@@ -1,0 +1,115 @@
+import { Dimensions } from 'react-native';
+
+export const API_URL = "http://192.168.1.215:5000";
+export const { width } = Dimensions.get('window');
+
+export const COLORS = {
+    headerGreen: '#2e7d32',
+    bgGreen: '#388e3c',
+    bgLight: '#f1f8e9',
+    white: '#ffffff',
+    textDark: '#1b1b1b',
+    cardRice: '#43a047',
+    cardWheat: '#fbc02d',
+    cardBg: '#ffffff',
+    accent: '#ff6f00',
+    gray: '#757575',
+};
+
+export const TRANSLATIONS = {
+    en: {
+        welcome: "Welcome back,",
+        weatherTitle: "WEATHER IN YOUR AREA",
+        dailyTip: "DAILY TIP",
+        startAnalysis: "Start New Analysis",
+        history: "HISTORY",
+        chat: "CHAT BOT",
+        profile: "PROFILE",
+        home: "HOME",
+        newScan: "New Analysis",
+        submit: "Get Recommendation",
+        location: "Location (Auto)",
+        soilPhoto: "Soil Photo",
+        farmDetails: "Farm Details",
+        selectLang: "Select Language",
+        analysisReport: "Analysis Report",
+        topCrops: "Top 3 Recommended Crops",
+        soilType: "Soil Type",
+        temp: "Temp",
+        rain: "Rain",
+        explainWhy: "Explain why?",
+        risks: "Risks"
+    },
+
+    hi: {
+        welcome: "वापसी पर स्वागत है,",
+        weatherTitle: "आपके क्षेत्र का मौसम",
+        dailyTip: "दैनिक सुझाव",
+        startAnalysis: "नई सिफारिश प्राप्त करें",
+        history: "इतिहास",
+        chat: "चैट बॉट",
+        profile: "प्रोफाइल",
+        home: "होम",
+        newScan: "नई स्कैन",
+        submit: "सिफारिश प्राप्त करें",
+        location: "स्थान (स्वतः)",
+        soilPhoto: "मिट्टी की फोटो",
+        farmDetails: "खेत का विवरण",
+        selectLang: "भाषा चुनें",
+        analysisReport: "विश्लेषण रिपोर्ट",
+        topCrops: "शीर्ष 3 अनुशंसित फसलें",
+        soilType: "मिट्टी का प्रकार",
+        temp: "तापमान",
+        rain: "बारिश",
+        explainWhy: "समझाएँ क्यों?",
+        risks: "जोखिम"
+    },
+    te: {
+        welcome: "స్వాగతం,",
+        weatherTitle: "మీ ప్రాంతంలో వాతావరణం",
+        dailyTip: "రోజువారీ చిట్కా",
+        startAnalysis: "కొత్త విశ్లేషణ ప్రారంభించండి",
+        history: "చరిత్ర",
+        chat: "చాట్ బాట్",
+        profile: "ప్రొఫైల్",
+        home: "హోమ్",
+        newScan: "కొత్త స్కాన్",
+        submit: "సిఫార్సు పొందండి",
+        location: "స్థానం (ఆటో)",
+        soilPhoto: "మట్టి ఫోటో",
+        farmDetails: "పొలం వివరాలు",
+        selectLang: "భాషను ఎంచుకోండి",
+        analysisReport: "విశ్లేషణ నివేదిక",
+        topCrops: "టాప్ 3 పంటలు",
+        soilType: "మట్టి రకం",
+        temp: "ఉష్ణోగ్రత",
+        rain: "వర్షం",
+        explainWhy: "ఎందుకు?",
+        risks: "ప్రమాదాలు"
+    },
+    ta: {
+        welcome: "நல்வரவு,",
+        weatherTitle: "உங்கள் பகுதியில் வானிலை",
+        dailyTip: "தினசரி குறிப்பு",
+        startAnalysis: "புதிய ஆய்வைத் தொடங்கவும்",
+        history: "வரலாறு",
+        chat: "சாட் பாட்",
+        profile: "சுயவிவரம்",
+        home: "முகப்பு",
+        newScan: "புதிய ஸ்கேன்",
+        submit: "பரிந்துரை பெறு",
+        location: "இடம் (தானியங்கி)",
+        soilPhoto: "மண் புகைப்படம்",
+        farmDetails: "பண்ணை விவரங்கள்",
+        selectLang: "மொழியைத் தேர்ந்தெடுக்கவும்",
+        analysisReport: "பகுப்பாய்வு அறிக்கை",
+        topCrops: "சிறந்த 3 பயிர்கள்",
+        soilType: "மண் வகை",
+        temp: "வெப்பநிலை",
+        rain: "மழை",
+        explainWhy: "ஏன்?",
+        risks: "இடர்கள்"
+    }
+};
+
+

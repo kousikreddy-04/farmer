@@ -1,0 +1,36 @@
+{
+    "mapping": {
+        "Black": {
+            "Nitrogen": 17.895846249225045,
+            "Phosphorous": 18.661500309981403,
+            "Potassium": 4.009299442033478
+        },
+        "Clayey": {
+            "Nitrogen": 18.52433764633395,
+            "Phosphorous": 18.090573012939,
+            "Potassium": 4.012939001848429
+        },
+        "Loamy": {
+            "Nitrogen": 18.432704402515725,
+            "Phosphorous": 18.50251572327044,
+            "Potassium": 3.9861635220125784
+        },
+        "Red": {
+            "Nitrogen": 18.65621079046424,
+            "Phosphorous": 18.82245922208281,
+            "Potassium": 3.8193224592220827
+        },
+        "Sandy": {
+            "Nitrogen": 18.643037974683544,
+            "Phosphorous": 18.491139240506328,
+            "Potassium": 3.75
+        }
+    },
+    "soil_types": [
+        "Black",
+        "Clayey",
+        "Loamy",
+        "Red",
+        "Sandy"
+    ]
+}

@@ -1,0 +1,13 @@
+flask
+flask-cors
+flask-jwt-extended
+psycopg2-binary
+python-dotenv
+bcrypt
+google-generativeai
+tensorflow-cpu
+numpy
+pandas
+scikit-learn
+gunicorn
+requests
