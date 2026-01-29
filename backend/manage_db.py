@@ -66,12 +66,25 @@ def migrate():
         # Skipped full creation here to avoid conflict with complex schema, but dealing with modification:
         
         print("--- Checking 'Recommendations' Table ---")
-        # Ensure Recommendations table exists before altering
-        cur.execute("SELECT to_regclass('public.Recommendations');")
-        if cur.fetchone()[0]:
-            add_column_if_not_exists(cur, 'Recommendations', 'full_response', 'JSONB')
-        else:
-            print("Warning: Recommendations table does not exist yet. Skipping column add.")
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS Recommendations (
+                id SERIAL PRIMARY KEY,
+                user_id INT,
+                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                latitude FLOAT,
+                longitude FLOAT,
+                soil_type VARCHAR(50),
+                weather_json JSONB,
+                recommended_crops JSONB,
+                full_response JSONB
+            );
+        """)
+        
+        # Index for faster history retrieval
+        cur.execute("CREATE INDEX IF NOT EXISTS idx_rec_timestamp ON Recommendations(timestamp DESC);")
+
+        # Now check for specific columns just in case table existed but was old version
+        add_column_if_not_exists(cur, 'Recommendations', 'full_response', 'JSONB')
 
         # 4. Seed Data
         print("--- Seeding Data ---")
