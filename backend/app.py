@@ -173,11 +173,16 @@ def profile():
         return jsonify({"message": str(e)}), 500
 
 # Initialize DB Table (Safety check)
+# Initialize DB Table (Safety check)
 def init_db():
     conn = get_db_connection()
     if conn:
         try:
-            with open('../database/schema.sql', 'r') as f:
+            # Use absolute path for robustness on Render
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            schema_path = os.path.join(base_dir, '../database/schema.sql')
+            
+            with open(schema_path, 'r') as f:
                 schema = f.read()
             cur = conn.cursor()
             cur.execute(schema)
@@ -190,10 +195,7 @@ def init_db():
     else:
         print("WARNING: Running without Database. functionality will be limited.")
 
-# Try to init on start
-init_db()
-
-# Try to init on start
+# Try to init on start (Only once)
 init_db()
 
 @app.route('/')
@@ -407,4 +409,5 @@ def recommend_hybrid():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(debug=True, host='0.0.0.0', port=port)
