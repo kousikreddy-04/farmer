@@ -15,12 +15,7 @@ DB_CONFIG = {
 }
 
 def get_connection():
-    try:
-        return psycopg2.connect(**DB_CONFIG)
-    except psycopg2.OperationalError:
-        # Fallback if needed (e.g., specific user preference locally)
-        DB_CONFIG['password'] = 'kousik'
-        return psycopg2.connect(**DB_CONFIG)
+    return psycopg2.connect(**DB_CONFIG)
 
 def add_column_if_not_exists(cur, table, column, data_type):
     try:
