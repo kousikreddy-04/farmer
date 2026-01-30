@@ -1,0 +1,43 @@
+# Exclude sensitive files from Docker image
+.env
+.env.local
+.env*.local
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+README.md
+*.md
+
+# Python cache
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Testing
+tests/
+test_*.py
+*_test.py
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Database data
+postgres_data/
+
+# Development files
+docker-compose.yml
+fix_model.py
+train_soil_model.py
+manage_db.py
+
+# Logs
+*.log

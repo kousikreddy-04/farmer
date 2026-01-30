@@ -4,237 +4,364 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crop Intelligence Dashboard</title>
-    <!-- Icons -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Smart Kisan - AI Crop Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ionicons@5.5.2/dist/css/ionicons.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+    <!-- Background -->
+    <div class="bg-overlay"></div>
 
-    <!-- Sidebar -->
-    <nav class="sidebar">
-        <div class="logo-icon">
-            <i class="fa-solid fa-leaf fa-lg"></i>
-        </div>
+    <!-- App Container -->
+    <div id="app">
 
-        <div class="nav-item active">
-            <i class="fa-solid fa-chart-line fa-lg"></i>
-            <span class="nav-label">Analysis</span>
-        </div>
-        <div class="nav-item">
-            <i class="fa-solid fa-clock-rotate-left fa-lg"></i>
-            <span class="nav-label">History</span>
-        </div>
-        <div class="nav-item">
-            <i class="fa-solid fa-cloud-sun fa-lg"></i>
-            <span class="nav-label">Weather</span>
-        </div>
-        <div class="nav-item" style="margin-top: auto;">
-            <i class="fa-solid fa-gear fa-lg"></i>
-            <span class="nav-label">Settings</span>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="main-content">
-        <header>
-            <div class="page-title">
-                <h1>Crop Intelligence</h1>
-                <p>AI-Powered Agriculture Decisions</p>
-            </div>
-            <div class="profile-actions">
-                <div class="icon-btn">
-                    <i class="fa-regular fa-bell"></i>
+        <!-- LOGIN SCREEN -->
+        <div id="login-screen" class="screen active">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <div class="logo-icon">🌱</div>
+                    <h1>Welcome Back!</h1>
+                    <p>Login to Smart Kisan</p>
                 </div>
-                <div class="icon-btn" style="background-color: var(--light-green);">
-                    <i class="fa-solid fa-leaf"></i>
-                </div>
-            </div>
-        </header>
-
-        <!-- Tabs -->
-        <div class="tabs-container">
-            <div class="tab active">Easy</div>
-            <div class="tab">Advanced</div>
-            <div class="tab">Smart</div>
-        </div>
-
-        <div class="dashboard-grid">
-            <!-- Left Panel: Inputs -->
-            <div class="card input-card">
-                <div class="section-header">
-                    <i class="fa-solid fa-sliders"></i>
-                    <span>Environmental Parameters</span>
-                </div>
-
-                <!-- Toggle for Photo vs Manual -->
-                <div style="margin-bottom: 20px; display: flex; gap: 10px;">
-                    <button class="action-btn upload-btn" onclick="document.getElementById('soilImage').click()"
-                        style="margin:0; font-size: 14px; padding: 10px;">
-                        <i class="fa-solid fa-camera"></i> Upload Soil Photo
+                <form id="login-form" class="auth-form">
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" id="login-phone" placeholder="10-digit number" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="login-password" placeholder="Enter password" required>
+                    </div>
+                    <div id="login-error" class="error-message"></div>
+                    <button type="submit" class="btn-primary">
+                        <span class="btn-text">LOGIN</span>
+                        <span class="btn-loader"></span>
                     </button>
-                    <input type="file" id="soilImage" class="file-input" accept="image/*"
-                        onchange="handleImageUpload(this)">
-                    <span id="fileName" style="font-size: 12px; color: #666; align-self: center;">No file chosen</span>
-                </div>
+                    <a href="#" class="link-text" onclick="showScreen('register')">New User? Register here</a>
+                </form>
+            </div>
+        </div>
 
-                <div class="slider-group">
-                    <div class="slider-label">
-                        <span>NITROGEN (N)</span>
-                        <span class="slider-value" id="val-n">50</span>
+        <!-- REGISTER SCREEN -->
+        <div id="register-screen" class="screen">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <div class="logo-icon">🌱</div>
+                    <h1>Join Smart Kisan</h1>
+                    <p>Create your account</p>
+                </div>
+                <form id="register-form" class="auth-form">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="register-name" placeholder="Your name" required>
                     </div>
-                    <input type="range" min="0" max="140" value="50" class="range-slider" id="slider-n"
-                        oninput="updateVal('n', this.value)">
-                </div>
-
-                <div class="slider-group">
-                    <div class="slider-label">
-                        <span>PHOSPHORUS (P)</span>
-                        <span class="slider-value" id="val-p">40</span>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" id="register-phone" placeholder="10-digit number" required>
                     </div>
-                    <input type="range" min="0" max="140" value="40" class="range-slider" id="slider-p"
-                        oninput="updateVal('p', this.value)">
-                </div>
-
-                <div class="slider-group">
-                    <div class="slider-label">
-                        <span>POTASSIUM (K)</span>
-                        <span class="slider-value" id="val-k">40</span>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="register-password" placeholder="Create password" required>
                     </div>
-                    <input type="range" min="0" max="140" value="40" class="range-slider" id="slider-k"
-                        oninput="updateVal('k', this.value)">
+                    <div class="form-group">
+                        <label>Location</label>
+                        <input type="text" id="register-location" placeholder="Your location">
+                    </div>
+                    <div id="register-error" class="error-message"></div>
+                    <button type="submit" class="btn-primary">
+                        <span class="btn-text">REGISTER</span>
+                        <span class="btn-loader"></span>
+                    </button>
+                    <a href="#" class="link-text" onclick="showScreen('login')">Already have account? Login</a>
+                </form>
+            </div>
+        </div>
+
+        <!-- HOME SCREEN -->
+        <div id="home-screen" class="screen">
+            <div class="top-bar">
+                <div class="user-greeting">
+                    <span class="greeting-text" id="greeting">Welcome back,</span>
+                    <h2 id="user-name">Farmer</h2>
+                </div>
+                <div class="profile-circle" onclick="showScreen('profile')">
+                    <img id="user-avatar" src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png" alt="Profile">
+                    <div class="online-dot"></div>
+                </div>
+            </div>
+
+            <div class="content-scroll">
+                <!-- Weather Card -->
+                <div class="weather-card" id="weather-card">
+                    <div class="weather-icon">☀️</div>
+                    <div class="weather-info">
+                        <h3 id="weather-temp">--°C</h3>
+                        <p id="weather-condition">Loading weather...</p>
+                    </div>
                 </div>
 
-                <button class="action-btn" onclick="runAnalysis()">
-                    <i class="fa-solid fa-bolt"></i>
-                    Run AI Analysis
+                <!-- Daily Tip -->
+                <div class="tip-card">
+                    <div class="tip-icon">🌿</div>
+                    <div class="tip-content">
+                        <span class="tip-label">DAILY TIP</span>
+                        <p class="tip-text">Rotate crops to maintain soil nitrogen naturally!</p>
+                    </div>
+                </div>
+
+                <!-- Main Action -->
+                <div class="main-action-card" onclick="showScreen('input')">
+                    <div class="action-icon">✨</div>
+                    <div class="action-content">
+                        <h3>Start New Analysis</h3>
+                        <p>Analyze soil & weather for results</p>
+                    </div>
+                    <span class="action-arrow">›</span>
+                </div>
+
+                <!-- Recent History -->
+                <div class="section-header">
+                    <h3>RECENT HISTORY</h3>
+                    <a href="#" onclick="showScreen('history')">View All</a>
+                </div>
+                <div id="recent-history">
+                    <div class="empty-state">
+                        <p>No recent history found.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-nav">
+                <div class="nav-item active" onclick="showScreen('home')">
+                    <ion-icon name="home"></ion-icon>
+                    <span>Home</span>
+                </div>
+                <div class="nav-item" onclick="showScreen('history')">
+                    <ion-icon name="time"></ion-icon>
+                    <span>History</span>
+                </div>
+                <div class="nav-fab" onclick="showScreen('input')">
+                    <ion-icon name="scan"></ion-icon>
+                </div>
+                <div class="nav-item" onclick="showScreen('chat')">
+                    <ion-icon name="chatbubbles"></ion-icon>
+                    <span>Chat</span>
+                </div>
+                <div class="nav-item" onclick="showScreen('profile')">
+                    <ion-icon name="person"></ion-icon>
+                    <span>Profile</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- INPUT SCREEN -->
+        <div id="input-screen" class="screen">
+            <div class="screen-header">
+                <button class="back-btn" onclick="showScreen('home')">
+                    <ion-icon name="arrow-back"></ion-icon>
+                </button>
+                <h2>New Analysis</h2>
+            </div>
+
+            <div class="content-scroll">
+                <div class="input-card">
+                    <h3>📍 Location</h3>
+                    <div class="location-info" id="location-info">Fetching location...</div>
+                </div>
+
+                <div class="input-card">
+                    <h3>📸 Soil Photo</h3>
+                    <div class="image-upload">
+                        <input type="file" id="soil-image" accept="image/*" onchange="handleImagePreview(this)">
+                        <label for="soil-image" class="upload-label">
+                            <ion-icon name="camera"></ion-icon>
+                            <span>Capture or Upload</span>
+                        </label>
+                        <div id="image-preview" class="image-preview"></div>
+                    </div>
+                </div>
+
+                <div class="input-card">
+                    <h3>🌾 Manual Parameters (Optional)</h3>
+                    <div class="slider-group">
+                        <label>Nitrogen (N): <span id="n-val">50</span></label>
+                        <input type="range" min="0" max="140" value="50" id="n-slider"
+                            oninput="updateSlider('n', this.value)">
+                    </div>
+                    <div class="slider-group">
+                        <label>Phosphorus (P): <span id="p-val">40</span></label>
+                        <input type="range" min="0" max="140" value="40" id="p-slider"
+                            oninput="updateSlider('p', this.value)">
+                    </div>
+                    <div class="slider-group">
+                        <label>Potassium (K): <span id="k-val">40</span></label>
+                        <input type="range" min="0" max="140" value="40" id="k-slider"
+                            oninput="updateSlider('k', this.value)">
+                    </div>
+                    <div class="slider-group">
+                        <label>pH Level: <span id="ph-val">7.0</span></label>
+                        <input type="range" min="3" max="10" step="0.1" value="7.0" id="ph-slider"
+                            oninput="updateSlider('ph', this.value)">
+                    </div>
+                </div>
+
+                <button class="btn-primary btn-large" onclick="submitAnalysis()">
+                    <span class="btn-text">Get Recommendation</span>
+                    <span class="btn-loader"></span>
                 </button>
             </div>
+        </div>
 
-            <!-- Right Panel: Results -->
-            <div class="card result-card" id="result-panel">
+        <!-- RESULT SCREEN -->
+        <div id="result-screen" class="screen">
+            <div class="screen-header">
+                <button class="back-btn" onclick="showScreen('home')">
+                    <ion-icon name="arrow-back"></ion-icon>
+                </button>
+                <h2>Analysis Report</h2>
+            </div>
 
-                <!-- Initial State -->
-                <div id="initial-state">
-                    <div class="placeholder-icon">
-                        <i class="fa-solid fa-chart-simple fa-2x" style="color: #d1d5db;"></i>
-                    </div>
-                    <div class="placeholder-text">
-                        <h3>Ready for Recommendation</h3>
-                        <p>Fill the parameters or scan your soil to get started</p>
-                    </div>
-                </div>
-
-                <!-- Loading State -->
-                <div id="loading-state" style="display: none;">
-                    <i class="fa-solid fa-circle-notch fa-spin fa-3x" style="color: var(--secondary-green);"></i>
-                    <p style="margin-top: 20px; color: var(--text-muted);">Analyzing satellite & soil data...</p>
-                </div>
-
-                <!-- Result State -->
-                <div id="result-state" class="active-result">
-                    <span class="result-badge">✨ AI RECOMMENDATION</span>
-                    <h1 class="crop-display" id="rec-crop">--</h1>
-                    <p class="confidence-bar">Confidence Score: <strong id="rec-conf">--%</strong></p>
-
-                    <div class="reasons-box">
-                        <h4 style="margin-bottom: 10px; color: var(--text-dark);">Why this crop?</h4>
-                        <ul id="rec-list" style="list-style-position: inside; color: #4b5563; line-height: 1.6;">
-                            <!-- reasons loaded here -->
-                        </ul>
+            <div class="content-scroll">
+                <div class="result-header">
+                    <div class="result-badge">✨ AI RECOMMENDATION</div>
+                    <h1 id="result-crop">Rice</h1>
+                    <div class="confidence-bar">
+                        <span>Confidence:</span>
+                        <div class="confidence-fill" id="confidence-fill"></div>
+                        <span id="confidence-text">0%</span>
                     </div>
                 </div>
 
+                <div class="result-card">
+                    <h3>🌱 Soil Assessment</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="label">Type</span>
+                            <span class="value" id="soil-type">--</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Fertility</span>
+                            <span class="value" id="soil-fertility">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <h3>🌤️ Weather Summary</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="label">Temperature</span>
+                            <span class="value" id="result-temp">--°C</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Humidity</span>
+                            <span class="value" id="result-humidity">--%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <h3>💡 Why this crop?</h3>
+                    <div id="explanation-text" class="explanation-text"></div>
+                </div>
+
+                <div class="result-card">
+                    <h3>⚠️ Risks & Precautions</h3>
+                    <div id="risks-list" class="risks-list"></div>
+                </div>
+
+                <button class="btn-secondary btn-large" onclick="showScreen('input')">
+                    <ion-icon name="scan"></ion-icon> New Scan
+                </button>
             </div>
         </div>
 
-        <!-- Floating Action Button (Decorative) -->
-        <div class="fab">
-            <i class="fa-solid fa-grip-dots"></i>
-            <i class="fa-solid fa-wand-magic-sparkles"></i>
-            <i class="fa-solid fa-expand"></i>
+        <!-- HISTORY SCREEN -->
+        <div id="history-screen" class="screen">
+            <div class="screen-header">
+                <button class="back-btn" onclick="showScreen('home')">
+                    <ion-icon name="arrow-back"></ion-icon>
+                </button>
+                <h2>History</h2>
+            </div>
+
+            <div class="content-scroll" id="history-list">
+                <div class="empty-state">
+                    <ion-icon name="time-outline" style="font-size: 64px; color: #ccc;"></ion-icon>
+                    <p>No analysis history yet</p>
+                </div>
+            </div>
         </div>
 
-    </main>
+        <!-- CHAT SCREEN -->
+        <div id="chat-screen" class="screen">
+            <div class="screen-header">
+                <button class="back-btn" onclick="showScreen('home')">
+                    <ion-icon name="arrow-back"></ion-icon>
+                </button>
+                <h2>AI Assistant</h2>
+            </div>
 
+            <div class="chat-messages" id="chat-messages">
+                <div class="chat-bubble bot">
+                    <p>Hello! I'm your AI farming assistant. Ask me anything about crops, soil, or farming practices!
+                    </p>
+                </div>
+            </div>
+
+            <div class="chat-input-container">
+                <input type="text" id="chat-input" placeholder="Type your question..."
+                    onkeypress="handleChatEnter(event)">
+                <button class="send-btn" onclick="sendMessage()">
+                    <ion-icon name="send"></ion-icon>
+                </button>
+            </div>
+        </div>
+
+        <!-- PROFILE SCREEN -->
+        <div id="profile-screen" class="screen">
+            <div class="screen-header">
+                <button class="back-btn" onclick="showScreen('home')">
+                    <ion-icon name="arrow-back"></ion-icon>
+                </button>
+                <h2>Profile</h2>
+            </div>
+
+            <div class="content-scroll">
+                <div class="profile-header-card">
+                    <img id="profile-avatar" src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png"
+                        alt="Profile">
+                    <h2 id="profile-name">Farmer</h2>
+                    <p id="profile-phone">--</p>
+                </div>
+
+                <div class="settings-group">
+                    <h3>Settings</h3>
+                    <div class="setting-item">
+                        <span>Language</span>
+                        <select id="language-select" onchange="changeLanguage(this.value)">
+                            <option value="en">English</option>
+                            <option value="hi">हिंदी</option>
+                            <option value="te">తెలుగు</option>
+                            <option value="ta">தமிழ்</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn-danger btn-large" onclick="logout()">
+                    <ion-icon name="log-out"></ion-icon> Logout
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     <script src="script.js"></script>
-    <script>
-        function updateVal(id, val) {
-            document.getElementById(`val-${id}`).innerText = val;
-        }
-
-        function handleImageUpload(input) {
-            if (input.files && input.files[0]) {
-                document.getElementById('fileName').innerText = "📷 " + input.files[0].name;
-            }
-        }
-
-        async function runAnalysis() {
-            // UI Transition
-            document.getElementById('initial-state').style.display = 'none';
-            document.getElementById('result-state').style.display = 'none';
-            document.getElementById('loading-state').style.display = 'block';
-
-            // Gather Data
-            const n = document.getElementById('slider-n').value;
-            const p = document.getElementById('slider-p').value;
-            const k = document.getElementById('slider-k').value;
-            const fileInput = document.getElementById('soilImage');
-
-            // Construct Payload
-            let payload = {
-                lat: 20.59, // Default/Mock for Web if not asking permissions immediately
-                lon: 78.96,
-                N: n, P: p, K: k
-            };
-
-            // If image is present, convert to base64
-            if (fileInput.files.length > 0) {
-                const file = fileInput.files[0];
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onloadend = async function () {
-                    payload.image_base64 = reader.result.split(',')[1];
-                    sendRequest(payload);
-                }
-            } else {
-                sendRequest(payload);
-            }
-        }
-
-        async function sendRequest(payload) {
-            try {
-                const response = await fetch('http://localhost:5000/recommend_hybrid', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                const data = await response.json();
-
-                // Update UI
-                document.getElementById('loading-state').style.display = 'none';
-                const resultDiv = document.getElementById('result-state');
-                resultDiv.style.display = 'flex'; // Flex to center content
-
-                document.getElementById('rec-crop').innerText = data.recommended_crop;
-                document.getElementById('rec-conf').innerText = (data.confidence * 100).toFixed(0) + "%";
-
-                const list = document.getElementById('rec-list');
-                list.innerHTML = "";
-                data.explanation.bullet_points.forEach(pt => {
-                    const li = document.createElement('li');
-                    li.innerText = pt;
-                    list.appendChild(li);
-                });
-
-            } catch (e) {
-                alert("Error connecting to AI: " + e.message);
-                document.getElementById('loading-state').style.display = 'none';
-                document.getElementById('initial-state').style.display = 'block';
-            }
-        }
-    </script>
 </body>
 
 </html>

@@ -85,7 +85,22 @@ export default function InputScreen({ location, onBack, onSuccess, language = 'e
                 },
                 body: JSON.stringify(payload)
             });
-            const data = await response.json();
+
+            const text = await response.text();
+            console.log("DEBUG: Response Status:", response.status);
+            console.log("DEBUG: Response Body:", text);
+
+            if (!response.ok) {
+                throw new Error(`Server Error (${response.status}): ${text.substring(0, 100)}`);
+            }
+
+            let data;
+            try {
+                data = JSON.parse(text);
+            } catch (e) {
+                throw new Error("Invalid Server Response (Not JSON)");
+            }
+
             if (data.error) throw new Error(data.error);
 
             // Pass result back
