@@ -8,6 +8,7 @@ from tensorflow.keras.preprocessing.image import img_to_array, load_img
 from PIL import Image
 import io
 import os
+import gc
 
 # Paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -93,6 +94,9 @@ def predict_soil_from_image(image_bytes):
     except Exception as e:
         print(f"Error in soil prediction: {e}")
         return "Unknown", 0.0
+    finally:
+        # Force cleanup to save memory on Render free tier
+        gc.collect()
 
 def get_npk_for_soil(soil_type):
     """
