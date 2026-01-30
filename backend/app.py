@@ -119,7 +119,8 @@ def login():
                 "user": {
                     "name": user['name'], 
                     "phone": user['phone'], 
-                    "location": user.get('location', '')
+                    "location": user.get('location', ''),
+                    "profile_pic": user.get('profile_pic')
                 }
             })
         else:
