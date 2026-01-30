@@ -23,7 +23,7 @@ soil_classes = None
 npk_mapping = None
 
 def load_resources():
-    global crop_model, soil_model, soil_classes, npk_mapping
+    global crop_model, npk_mapping
     print("Loading ML Resources...")
     
     try:
@@ -33,18 +33,9 @@ def load_resources():
     except Exception as e:
         print(f"Failed to load crop model: {e}")
 
-    try:
-        soil_model = load_model(SOIL_MODEL_PATH)
-        print("Soil Model loaded.")
-        
-        # Load classes
-        with open(os.path.join(MODEL_DIR, "soil_classes.json"), "r") as f:
-            indices = json.load(f)
-            # Invert: {0: 'Black Soil', ...}
-            soil_classes = {v: k for k, v in indices.items()}
-            
-    except Exception as e:
-        print(f"Failed to load soil model: {e}")
+    # LAZY LOAD: Soil model NOT loaded at startup to save memory
+    # It will be loaded on-demand when image analysis is requested
+    print("Soil Model will be loaded on-demand (lazy loading)")
 
     try:
         with open(MAPPING_PATH, "r") as f:
@@ -54,12 +45,35 @@ def load_resources():
     except Exception as e:
         print(f"Failed to load NPK mapping: {e}")
 
+def load_soil_model_lazy():
+    """Load soil model only when needed"""
+    global soil_model, soil_classes
+    
+    if soil_model is not None:
+        return  # Already loaded
+    
+    try:
+        print("Lazy-loading Soil Model...")
+        soil_model = load_model(SOIL_MODEL_PATH)
+        
+        # Load classes
+        with open(os.path.join(MODEL_DIR, "soil_classes.json"), "r") as f:
+            indices = json.load(f)
+            soil_classes = {v: k for k, v in indices.items()}
+        
+        print("Soil Model loaded successfully.")
+    except Exception as e:
+        print(f"Failed to lazy-load soil model: {e}")
+
 def predict_soil_from_image(image_bytes):
     """
     Predicts soil type from image bytes.
     """
+    # Lazy load soil model when needed
+    load_soil_model_lazy()
+    
     if soil_model is None:
-        return "Unknown"
+        return "Unknown", 0.0
 
     try:
         # Preprocess

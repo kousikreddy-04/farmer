@@ -66,7 +66,7 @@ def register():
     location = data.get('location', '')
     
     if not name or not phone or not password:
-        return jsonify({"os": "error", "message": "Missing fields"}), 400
+        return jsonify({"status": "error", "message": "Missing fields"}), 400
         
     conn = get_db_connection()
     if not conn: return jsonify({"status": "error", "message": "DB Error"}), 500
