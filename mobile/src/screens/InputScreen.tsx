@@ -38,7 +38,10 @@ export default function InputScreen({ location, onBack, onSuccess, language = 'e
 
     const pickImage = async () => {
         let res = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images, allowsEditing: true, quality: 0.5, base64: true,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            quality: 0.2,  // Reduced from 0.5 to prevent 502 errors
+            base64: true,
         });
         if (!res.canceled && res.assets[0].base64) {
             setSoilImage(res.assets[0].uri);
@@ -48,7 +51,10 @@ export default function InputScreen({ location, onBack, onSuccess, language = 'e
 
     const takePhoto = async () => {
         let res = await ImagePicker.launchCameraAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images, allowsEditing: true, quality: 0.5, base64: true,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            quality: 0.2,  // Reduced from 0.5 to prevent 502 errors
+            base64: true,
         });
         if (!res.canceled && res.assets[0].base64) {
             setSoilImage(res.assets[0].uri);

@@ -299,8 +299,14 @@ def recommend_hybrid():
         soil_conf = 0.0
         
         if image_base64:
-            image_bytes = base64.b64decode(image_base64)
-            soil_type, soil_conf = ml_pipeline.predict_soil_from_image(image_bytes)
+            try:
+                print("DEBUG: Attempting soil analysis...")
+                image_bytes = base64.b64decode(image_base64)
+                soil_type, soil_conf = ml_pipeline.predict_soil_from_image(image_bytes)
+                print(f"DEBUG: Soil type: {soil_type}")
+            except Exception as e:
+                print(f"WARN: Soil prediction failed: {e}")
+                soil_type = data.get('soil_type', 'Loamy')
         else:
             soil_type = data.get('soil_type', 'Loamy')
             
