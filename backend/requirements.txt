@@ -13,3 +13,7 @@ scikit-learn
 gunicorn
 requests
 Pillow
+SpeechRecognition
+gTTS
+pydub
+ffmpeg-python

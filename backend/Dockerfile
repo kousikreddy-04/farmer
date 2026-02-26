@@ -8,6 +8,9 @@ ENV PYTHONUNBUFFERED=1
 # Set work directory
 WORKDIR /app
 
+# Install system dependencies (ffmpeg required for pydub)
+RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
+
 # Install python dependencies (psycopg2-binary includes necessary libs)
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
