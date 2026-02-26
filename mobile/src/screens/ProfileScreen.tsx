@@ -54,7 +54,8 @@ export default function ProfileScreen({ language = 'en', setLanguage, user, toke
         { code: 'en', label: 'English' },
         { code: 'hi', label: 'हिन्दी' },
         { code: 'te', label: 'తెలుగు' },
-        { code: 'ta', label: 'தமிழ்' }
+        { code: 'ta', label: 'தமிழ்' },
+        { code: 'kn', label: 'ಕನ್ನಡ' }
     ];
 
     return (

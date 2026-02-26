@@ -28,7 +28,8 @@ export default function RegisterScreen({ onLogin, onNavigateLogin }: any) {
             const data = await res.json();
 
             if (data.status === 'success') {
-                onLogin(data.token, data.user);
+                alert("Account created successfully! Please login.");
+                onNavigateLogin();
             } else {
                 setError(data.message || "Registration failed");
             }

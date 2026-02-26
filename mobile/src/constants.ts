@@ -1,6 +1,6 @@
 import { Dimensions } from 'react-native';
 
-export const API_URL = "https://farmer-j1uk.onrender.com";
+export const API_URL = 'http://10.249.137.42:5000';//'https://smart-kisan-1.onrender.com';
 export const { width } = Dimensions.get('window');
 
 export const COLORS = {
@@ -109,6 +109,29 @@ export const TRANSLATIONS = {
         rain: "மழை",
         explainWhy: "ஏன்?",
         risks: "இடர்கள்"
+    },
+    kn: {
+        welcome: "ಸ್ವಾಗತ,",
+        weatherTitle: "ನಿಮ್ಮ ಪ್ರದೇಶದ ಹವಾಮಾನ",
+        dailyTip: "ದೈನಂದಿನ ಸಲಹೆ",
+        startAnalysis: "ಹೊಸ ವಿಶ್ಲೇಷಣೆ ಪ್ರಾರಂಭಿಸಿ",
+        history: "ಇತಿಹಾಸ",
+        chat: "ಚಾಟ್ ಬಾಟ್",
+        profile: "ಪ್ರೊಫೈಲ್",
+        home: "ಮುಖಪುಟ",
+        newScan: "ಹೊಸ ಸ್ಕ್ಯಾನ್",
+        submit: "ಶಿಫಾರಸು ಪಡೆಯಿರಿ",
+        location: "ಸ್ಥಳ (ಸ್ವಯಂ)",
+        soilPhoto: "ಮಣ್ಣಿನ ಫೋಟೋ",
+        farmDetails: "ಕೃಷಿ ವಿವರಗಳು",
+        selectLang: "ಭಾಷೆ ಆಯ್ಕೆಮಾಡಿ",
+        analysisReport: "ವಿಶ್ಲೇಷಣೆ ವರದಿ",
+        topCrops: "ವಿನ್ನಿಂಗ್ 3 ಬೆಳೆಗಳು",
+        soilType: "ಮಣ್ಣಿನ ಪ್ರಕಾರ",
+        temp: "ತಾಪಮಾನ",
+        rain: "ಮಳೆ",
+        explainWhy: "ಏಕೆ?",
+        risks: "ಅಪಾಯಗಳು"
     }
 };
 

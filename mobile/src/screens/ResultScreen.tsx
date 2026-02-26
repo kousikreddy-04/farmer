@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS, TRANSLATIONS } from '../constants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { COLORS, TRANSLATIONS, API_URL } from '../constants';
 
 export default function ResultScreen({ apiResult, onBack, onNewScan, language = 'en' }: any) {
     const [selectedCropIndex, setSelectedCropIndex] = React.useState(0);
@@ -66,6 +67,37 @@ export default function ResultScreen({ apiResult, onBack, onNewScan, language = 
 
                 <TouchableOpacity style={styles.fab} onPress={onNewScan}>
                     <Text style={{ color: 'white', fontWeight: 'bold' }}>New Scan</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={[styles.fab, { backgroundColor: '#FF9800', marginTop: 15 }]}
+                    onPress={async () => {
+                        try {
+                            const token = await AsyncStorage.getItem('authToken');
+                            if (!token) {
+                                Alert.alert("Login Required", "Please login to start tracking crops.");
+                                return;
+                            }
+                            const response = await fetch(`${API_URL}/api/cultivation/start`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${token}`
+                                },
+                                body: JSON.stringify({ crop_name: apiResult.recommended_crops[selectedCropIndex].crop })
+                            });
+                            if (response.ok) {
+                                Alert.alert("Success!", `You are now cultivating ${apiResult.recommended_crops[selectedCropIndex].crop}. Check the Dashboard for your schedule!`);
+                                // Optionally navigate to home
+                                onBack();
+                            } else {
+                                Alert.alert("Error", "Failed to start cultivation.");
+                            }
+                        } catch (e) {
+                            Alert.alert("Error", "Network error.");
+                        }
+                    }}>
+                    <Ionicons name="leaf" size={20} color="white" style={{ marginRight: 10 }} />
+                    <Text style={{ color: 'white', fontWeight: 'bold' }}>Start Cultivating {apiResult.recommended_crops[selectedCropIndex].crop}</Text>
                 </TouchableOpacity>
                 <View style={{ height: 40 }} />
             </ScrollView>

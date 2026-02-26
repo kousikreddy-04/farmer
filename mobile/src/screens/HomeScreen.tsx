@@ -6,6 +6,21 @@ import WeatherCard from '../components/WeatherCard';
 
 export default function HomeScreen({ weather, history, onStartAnalysis, onViewAllHistory, onViewItem, language = 'en', user }: any) {
     const t = TRANSLATIONS[language];
+    const tips = [
+        "Rotate crops to maintain soil nitrogen naturally!",
+        "Test your soil pH regularly for optimal nutrient absorption.",
+        "Use organic compost to improve soil moisture retention.",
+        "Plant cover crops during off-seasons to prevent soil erosion.",
+        "Water early in the morning to reduce evaporation losses.",
+        "Identify and remove diseased plants quickly to stop spreading.",
+        "Encourage beneficial insects like ladybugs to control pests.",
+        "Mulching helps suppress weeds and keeps soil temperatures stable."
+    ];
+
+    // Pick a tip based on the day of the year so it changes daily
+    const dayOfYear = Math.floor((new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 1000 / 60 / 60 / 24);
+    const dailyTip = tips[dayOfYear % tips.length];
+
     return (
         <View style={styles.fill}>
             {/* Header */}
@@ -30,7 +45,7 @@ export default function HomeScreen({ weather, history, onStartAnalysis, onViewAl
                     </View>
                     <View style={{ flex: 1, marginLeft: 15 }}>
                         <Text style={{ color: '#90caf9', fontWeight: 'bold', fontSize: 12 }}>{t.dailyTip}</Text>
-                        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16, marginTop: 5 }}>Rotate crops to maintain soil nitrogen naturally!</Text>
+                        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16, marginTop: 5 }}>{dailyTip}</Text>
                     </View>
                 </View>
 

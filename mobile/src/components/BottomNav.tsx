@@ -16,13 +16,13 @@ export default function BottomNav({ activeTab, onTabChange, onFabPress }: any) {
             <View style={styles.navBar}>
                 <NavBtn id='home' icon='home-outline' label="HOME" />
                 <NavBtn id='history' icon='time-outline' label="HISTORY" />
-                <View style={{ width: 50 }} />
-                <NavBtn id='chat' icon='chatbubble-ellipses-outline' label="CHAT" />
+                <NavBtn id='cultivation' icon='leaf-outline' label="TRACK" />
+                <NavBtn id='chat' icon='chatbubbles-outline' label="CHAT" />
                 <NavBtn id='profile' icon='person-outline' label="PROFILE" />
             </View>
 
-            {/* FAB - Using absolute positioning to float above. Hidden on Chat */}
-            {activeTab !== 'chat' && (
+            {/* FAB - Using absolute positioning to float above. Hidden on Chat, Track, Profile */}
+            {!['chat', 'cultivation', 'profile'].includes(activeTab) && (
                 <TouchableOpacity style={styles.fabCenter} onPress={onFabPress}>
                     <MaterialCommunityIcons name="star-four-points" size={36} color="white" />
                 </TouchableOpacity>
@@ -36,5 +36,5 @@ const styles = StyleSheet.create({
     navBar: { flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', width: '100%', paddingVertical: 10, paddingHorizontal: 20, borderTopLeftRadius: 30, borderTopRightRadius: 30, elevation: 20, shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 20 },
     navItem: { alignItems: 'center', justifyContent: 'center', width: 60 },
     navText: { fontSize: 10, fontWeight: 'bold', marginTop: 4, color: '#999' },
-    fabCenter: { position: 'absolute', bottom: 45, width: 70, height: 70, borderRadius: 35, backgroundColor: '#009688', alignItems: 'center', justifyContent: 'center', elevation: 10, shadowColor: '#000', shadowOpacity: 0.3, shadowOffset: { width: 0, height: 4 }, borderWidth: 6, borderColor: '#f5f5f5' },
+    fabCenter: { position: 'absolute', bottom: 65, width: 70, height: 70, borderRadius: 35, backgroundColor: '#009688', alignItems: 'center', justifyContent: 'center', elevation: 10, shadowColor: '#000', shadowOpacity: 0.3, shadowOffset: { width: 0, height: 4 }, borderWidth: 6, borderColor: '#f5f5f5' },
 });

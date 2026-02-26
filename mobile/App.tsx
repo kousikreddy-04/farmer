@@ -14,17 +14,18 @@ import ChatScreen from './src/screens/ChatScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
+import CultivationDashboard from './src/screens/CultivationDashboard';
 
-type Screen = 'SPLASH' | 'HOME' | 'INPUT' | 'PROCESSING' | 'RESULT' | 'HISTORY' | 'PROFILE' | 'CHAT' | 'LOGIN' | 'REGISTER';
+type Screen = 'SPLASH' | 'HOME' | 'INPUT' | 'PROCESSING' | 'RESULT' | 'HISTORY' | 'PROFILE' | 'CHAT' | 'LOGIN' | 'REGISTER' | 'CULTIVATION';
 
 export default function App() {
-    const [screen, setScreen] = useState<Screen>('SPLASH'); // SPLASH, HOME, INPUT, PROCESSING, RESULT, HISTORY, CHAT, PROFILE, LOGIN, REGISTER
+    const [screen, setScreen] = useState<Screen>('SPLASH'); // SPLASH, HOME, INPUT, PROCESSING, RESULT, HISTORY, CHAT, PROFILE, LOGIN, REGISTER, CULTIVATION
     const [activeTab, setActiveTab] = useState('home');
     const [weather, setWeather] = useState<any>(null);
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
     const [history, setHistory] = useState<any[]>([]);
     const [apiResult, setApiResult] = useState<any>(null);
-    const [language, setLanguage] = useState<'en' | 'hi' | 'te' | 'ta'>('en');
+    const [language, setLanguage] = useState<'en' | 'hi' | 'te' | 'ta' | 'kn'>('en');
     const [token, setToken] = useState<string | null>(null);
     const [user, setUser] = useState<any>(null); // { name, phone, location }
 
@@ -92,8 +93,11 @@ export default function App() {
     const fetchHistory = async () => {
         if (!token) return; // Don't fetch if no token
         try {
-            let res = await fetch(`${API_URL}/history`, {
-                headers: { 'Authorization': `Bearer ${token}` }
+            let res = await fetch(`${API_URL}/history?t=${new Date().getTime()}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Cache-Control': 'no-cache'
+                }
             });
             let data = await res.json();
             setHistory(data);
@@ -199,6 +203,7 @@ export default function App() {
                     }}
                     onStartScan={() => setScreen('INPUT')}
                 />;
+            case 'CULTIVATION': return <CultivationDashboard language={language} />;
             case 'CHAT': return <ChatScreen language={language} user={user} />;
             case 'PROFILE':
                 return <ProfileScreen

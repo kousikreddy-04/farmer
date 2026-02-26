@@ -31,7 +31,7 @@ Your goal is to help farmers with crops, fertilizers, diseases, weather, and gov
 - If asked about prices or subsidies, give general info and suggest checking official sources like e-NAM.
 """
 
-def get_response(message, language='en'):
+def get_response(message, language='en', cultivation_context=None):
     """
     Generates a response using Gemini API.
     """
@@ -45,7 +45,11 @@ def get_response(message, language='en'):
 
     try:
         # Construct Prompt
-        full_prompt = f"{SYSTEM_PROMPT}\n\nUser ({language}): {message}\nSmart Kisan:"
+        dynamic_system_prompt = SYSTEM_PROMPT
+        if cultivation_context:
+            dynamic_system_prompt += f"\n\nIMPORTANT CONTEXT: The user is currently cultivating {cultivation_context}. Keep this in mind for all your advice."
+        
+        full_prompt = f"{dynamic_system_prompt}\n\nUser ({language}): {message}\nSmart Kisan:"
         
         response = client.models.generate_content(
             model='gemini-2.5-flash',
@@ -60,3 +64,40 @@ def get_response(message, language='en'):
         print(f"Gemini Error: {e}")
         sys.stdout.flush()
         return f"DEBUG: Gemini Error: {str(e)}"
+
+def generate_cultivation_schedule(crop_name):
+    """
+    Generates a generic farming schedule for a given crop in JSON format.
+    Output: [{'task_name': 'Sowing', 'days_from_start': 0}, ...]
+    """
+    if not client:
+        print("DEBUG: Client is None.")
+        return []
+    
+    prompt = f"""
+    You are an expert agronomist. The user is starting a '{crop_name}' cultivation.
+    Generate a simple chronological task schedule for this crop from sowing to harvest.
+    Return ONLY a valid JSON array of objects. Do not include markdown formatting or backticks.
+    Format:
+    [
+      {{"task_name": "Prepare Soil & Sowing", "days_from_start": 0}},
+      {{"task_name": "First Watering", "days_from_start": 2}},
+      {{"task_name": "Add Nitrogen Fertilizer", "days_from_start": 15}},
+      {{"task_name": "Harvest", "days_from_start": 90}}
+    ]
+    Keep it to 5-8 major tasks.
+    """
+    try:
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=prompt
+        )
+        import json
+        text = response.text.replace("```json", "").replace("```", "").strip()
+        data = json.loads(text)
+        if isinstance(data, list):
+            return data
+        return []
+    except Exception as e:
+        print(f"Schedule Gen Error: {e}")
+        return []
