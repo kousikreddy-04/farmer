@@ -2,15 +2,15 @@ import pickle
 import json
 import pandas as pd
 import numpy as np
-import tensorflow as tf
 from PIL import Image
 import io
 import os
 import gc
 
-# Limit threading to reduce CPU/RAM overhead
-tf.config.threading.set_inter_op_parallelism_threads(1)
-tf.config.threading.set_intra_op_parallelism_threads(1)
+try:
+    import tflite_runtime.interpreter as tflite
+except ImportError:
+    import tensorflow.lite as tflite
 
 # Paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -57,7 +57,8 @@ def load_soil_model_lazy():
     
     try:
         print("Lazy-loading Soil Model (TFLite)...")
-        soil_model = tf.lite.Interpreter(model_path=SOIL_MODEL_PATH)
+        # Use num_threads=1 to restrict CPU and memory usage
+        soil_model = tflite.Interpreter(model_path=SOIL_MODEL_PATH, num_threads=1)
         soil_model.allocate_tensors()
         
         # Load classes
