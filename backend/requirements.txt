@@ -4,7 +4,7 @@ flask-jwt-extended
 psycopg2-binary
 python-dotenv
 bcrypt
-google-generativeai
+google-genai
 tensorflow-cpu==2.17.0
 numpy
 pandas

@@ -48,7 +48,7 @@ export default function RegisterScreen({ onLogin, onNavigateLogin }: any) {
 
             <View style={styles.form}>
                 <Text style={styles.label}>Full Name</Text>
-                <TextInput style={styles.input} placeholder="Kousik Reddy" value={name} onChangeText={setName} />
+                <TextInput style={styles.input} placeholder="user name" value={name} onChangeText={setName} />
 
                 <Text style={styles.label}>Phone Number</Text>
                 <TextInput style={styles.input} keyboardType="phone-pad" placeholder="10-digit number" value={phone} onChangeText={setPhone} />

@@ -2,7 +2,7 @@
 // SMART KISAN - WEB APP JAVASCRIPT
 // ========================================
 
-const API_URL = 'https://farmer-5hsl.onrender.com';
+const API_URL = 'http://127.0.0.1:5000';
 let currentUser = null;
 let authToken = null;
 let currentLanguage = 'en';

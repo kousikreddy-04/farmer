@@ -1,6 +1,6 @@
 import { Dimensions } from 'react-native';
 
-export const API_URL = "https://farmer-j1uk.onrender.com";
+export const API_URL = "http://192.168.1.215:5000";
 export const { width } = Dimensions.get('window');
 
 export const COLORS = {

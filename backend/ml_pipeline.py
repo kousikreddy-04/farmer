@@ -3,18 +3,20 @@ import json
 import pandas as pd
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing.image import img_to_array, load_img
 from PIL import Image
 import io
 import os
 import gc
 
+# Limit threading to reduce CPU/RAM overhead
+tf.config.threading.set_inter_op_parallelism_threads(1)
+tf.config.threading.set_intra_op_parallelism_threads(1)
+
 # Paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_DIR = os.path.join(BASE_DIR, "models")
 CROP_MODEL_PATH = os.path.join(MODEL_DIR, "crop_model.pkl")
-SOIL_MODEL_PATH = os.path.join(MODEL_DIR, "soil_model.h5")
+SOIL_MODEL_PATH = os.path.join(MODEL_DIR, "soil_model.tflite")
 MAPPING_PATH = os.path.join(MODEL_DIR, "soil_npk_mapping.json")
 
 # Global variables for models
@@ -54,8 +56,9 @@ def load_soil_model_lazy():
         return  # Already loaded
     
     try:
-        print("Lazy-loading Soil Model...")
-        soil_model = load_model(SOIL_MODEL_PATH)
+        print("Lazy-loading Soil Model (TFLite)...")
+        soil_model = tf.lite.Interpreter(model_path=SOIL_MODEL_PATH)
+        soil_model.allocate_tensors()
         
         # Load classes
         with open(os.path.join(MODEL_DIR, "soil_classes.json"), "r") as f:
@@ -70,6 +73,7 @@ def predict_soil_from_image(image_bytes):
     """
     Predicts soil type from image bytes.
     """
+    global soil_model
     # Lazy load soil model when needed
     load_soil_model_lazy()
     
@@ -80,22 +84,32 @@ def predict_soil_from_image(image_bytes):
         # Preprocess
         img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
         img = img.resize((150, 150))
-        img_array = img_to_array(img)
+        img_array = np.array(img, dtype=np.float32)
         img_array = np.expand_dims(img_array, axis=0)
         img_array /= 255.0
 
-        # Predict
-        preds = soil_model.predict(img_array)
+        # Predict using TFLite
+        input_details = soil_model.get_input_details()
+        output_details = soil_model.get_output_details()
+        
+        soil_model.set_tensor(input_details[0]['index'], img_array)
+        soil_model.invoke()
+        preds = soil_model.get_tensor(output_details[0]['index'])
+        
         class_idx = np.argmax(preds)
         confidence = float(np.max(preds))
-        soil_type = soil_classes.get(class_idx, "Unknown")
-        
+        soil_type = soil_classes.get(str(class_idx), "Unknown") # JSON keys are strings
+        if soil_type == "Unknown":
+            # fallback if int vs string lookup
+            soil_type = soil_classes.get(class_idx, "Unknown")
+            
         return soil_type, confidence
     except Exception as e:
         print(f"Error in soil prediction: {e}")
         return "Unknown", 0.0
     finally:
-        # Force cleanup to save memory on Render free tier
+        # Aggressively clear model to free memory
+        soil_model = None
         gc.collect()
 
 def get_npk_for_soil(soil_type):

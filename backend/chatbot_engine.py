@@ -1,6 +1,6 @@
 
 import os
-import google.generativeai as genai
+from google import genai
 from dotenv import load_dotenv
 
 import sys
@@ -10,17 +10,16 @@ load_dotenv()
 API_KEY = os.getenv("GEMINI_API_KEY")
 
 if API_KEY:
-    genai.configure(api_key=API_KEY)
     try:
-        model = genai.GenerativeModel('gemini-2.5-flash')
-        print(f"DEBUG: Successfully loaded gemini-2.5-flash")
+        client = genai.Client(api_key=API_KEY)
+        print(f"DEBUG: Successfully loaded client for gemini-2.5-flash via google.genai")
         sys.stdout.flush()
     except Exception as e:
-        print(f"DEBUG: Failed to load model: {e}")
+        print(f"DEBUG: Failed to init client: {e}")
         sys.stdout.flush()
-        model = None
+        client = None
 else:
-    model = None
+    client = None
 
 
 SYSTEM_PROMPT = """
@@ -39,8 +38,8 @@ def get_response(message, language='en'):
     print(f"DEBUG: Processing message: '{message}' in '{language}'")
     sys.stdout.flush()
     
-    if not model:
-        print(f"DEBUG: Model is None. API_KEY present: {bool(API_KEY)}")
+    if not client:
+        print(f"DEBUG: Client is None. API_KEY present: {bool(API_KEY)}")
         sys.stdout.flush()
         return f"DEBUG: Offline. Key Present: {bool(API_KEY)}. Path: {os.getcwd()}"
 
@@ -48,7 +47,10 @@ def get_response(message, language='en'):
         # Construct Prompt
         full_prompt = f"{SYSTEM_PROMPT}\n\nUser ({language}): {message}\nSmart Kisan:"
         
-        response = model.generate_content(full_prompt)
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=full_prompt
+        )
         reply = response.text.strip()
         print(f"DEBUG: Gemini Reply: {reply[:50]}...")
         sys.stdout.flush()

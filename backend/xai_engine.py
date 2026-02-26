@@ -1,6 +1,6 @@
 
 import os
-import google.generativeai as genai
+from google import genai
 from dotenv import load_dotenv
 from knowledge_base import CROP_INFO
 
@@ -11,15 +11,15 @@ load_dotenv()
 API_KEY = os.getenv("GEMINI_API_KEY")
 
 if API_KEY:
-    genai.configure(api_key=API_KEY)
     try:
-        model = genai.GenerativeModel('gemini-2.5-flash')
-        print("DEBUG: XAI Engine loaded gemini-2.5-flash")
+        client = genai.Client(api_key=API_KEY)
+        print("DEBUG: XAI Engine loaded gemini-2.5-flash via google.genai")
         sys.stdout.flush()
-    except:
-        model = None
+    except Exception as e:
+        print(f"DEBUG: Failed to init genai block: {e}")
+        client = None
 else:
-    model = None
+    client = None
 
 # Fallback Templates (used if API fails)
 TEMPLATES = {
@@ -46,7 +46,7 @@ def generate_explanation(crop, soil_type, weather_data, confidence, language="en
     Generates a detailed explanation using Gemini API.
     """
     # 1. Fallback Logic
-    if not model:
+    if not client:
         return generate_fallback(crop, soil_type, weather_data, language)
 
     try:
@@ -75,7 +75,10 @@ def generate_explanation(crop, soil_type, weather_data, confidence, language="en
         Keep it concise (maximum 60 words).
         """
         
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=prompt
+        )
         text_response = response.text.strip()
         
         return {
