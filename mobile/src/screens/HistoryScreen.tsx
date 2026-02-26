@@ -18,11 +18,11 @@ export default function HistoryScreen({ history, language = 'en', onViewItem, on
                 renderItem={({ item }) => (
                     <TouchableOpacity style={styles.historyCard} onPress={() => item.full_response && onViewItem(item.full_response)}>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{item.recommended_crops[0].crop}</Text>
+                            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{item.recommended_crops?.[0]?.crop || 'Unknown'}</Text>
                             <Text style={{ color: '#666' }}>{item.timestamp}</Text>
                         </View>
-                        <Text style={{ color: COLORS.headerGreen, marginTop: 5 }}>Confidence: {(item.recommended_crops[0].confidence * 100).toFixed(0)}%</Text>
-                        <Text style={{ fontSize: 12, marginTop: 5, color: '#444' }}>Soil: {item.soil_assessment.type}</Text>
+                        <Text style={{ color: COLORS.headerGreen, marginTop: 5 }}>Confidence: {item.recommended_crops?.[0]?.confidence ? (item.recommended_crops[0].confidence * 100).toFixed(0) : 0}%</Text>
+                        <Text style={{ fontSize: 12, marginTop: 5, color: '#444' }}>Soil: {item.soil_assessment?.type || 'Unknown'}</Text>
                         {!item.full_response && <Text style={{ fontSize: 10, color: '#999', marginTop: 5 }}>(Detail not available)</Text>}
                     </TouchableOpacity>
                 )}
