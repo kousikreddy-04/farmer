@@ -303,7 +303,11 @@ def recommend_hybrid():
                 print("DEBUG: Attempting soil analysis...")
                 image_bytes = base64.b64decode(image_base64)
                 soil_type, soil_conf = ml_pipeline.predict_soil_from_image(image_bytes)
-                print(f"DEBUG: Soil type: {soil_type}")
+                print(f"DEBUG: Soil type: {soil_type} (conf: {soil_conf})")
+                
+                if soil_conf < 0.85:
+                    return jsonify({"error": "The image doesn't clearly look like recognizable soil. Please upload a clearer photo of the ground.", "status": "error"}), 400
+                    
             except Exception as e:
                 print(f"WARN: Soil prediction failed: {e}")
                 soil_type = data.get('soil_type', 'Loamy')
