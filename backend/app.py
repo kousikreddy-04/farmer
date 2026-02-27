@@ -40,11 +40,13 @@ def get_db_connection():
         DB_AVAILABLE = False
         return None
 
+from datetime import timedelta
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 import bcrypt
 
 # --- CONFIG ---
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "super-secret-key-change-this") 
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=30)
 jwt = JWTManager(app)
 
 # Helper: Hash Password

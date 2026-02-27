@@ -90,23 +90,34 @@ export default function App() {
         } catch (e) { console.log("Weather Fetch Error", e); }
     };
 
-    const fetchHistory = async () => {
-        if (!token) return; // Don't fetch if no token
+    const fetchHistory = async (currentToken: string | null = token) => {
+        if (!currentToken) return; // Don't fetch if no token
         try {
             let res = await fetch(`${API_URL}/history?t=${new Date().getTime()}`, {
                 headers: {
-                    'Authorization': `Bearer ${token}`,
+                    'Authorization': `Bearer ${currentToken}`,
                     'Cache-Control': 'no-cache'
                 }
             });
-            let data = await res.json();
-            setHistory(data);
-        } catch (e) { console.log("History Fetch Error", e); }
+            if (res.status === 401) {
+                // Token expired or invalid
+                handleLogout();
+                return;
+            }
+            if (res.ok) {
+                let data = await res.json();
+                if (Array.isArray(data)) {
+                    setHistory(data);
+                }
+            }
+        } catch (e) {
+            console.log("History Fetch Error", e);
+        }
     };
 
     // Reload history when token changes (login)
     useEffect(() => {
-        if (token) fetchHistory();
+        if (token) fetchHistory(token);
         else setHistory([]); // Clear history on logout
     }, [token]);
 
