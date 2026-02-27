@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "mobile",
-    "slug": "mobile",
+    "name": "Smart Kisan",
+    "slug": "smart-kisan-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -28,8 +28,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "6c5288e5-d625-40f2-a8c5-46aa7de041ab"
+        "projectId": "97b6c8a3-1687-46bb-9f0b-e5a56bd158a4"
       }
-    }
+    },
+    "owner": "kousikreddy"
   }
 }

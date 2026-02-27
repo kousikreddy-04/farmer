@@ -61,7 +61,7 @@ export default function App() {
     // --- BACK HANDLER ---
     useEffect(() => {
         const backAction = () => {
-            if (screen === 'HOME') {
+            if (screen === 'HOME' || screen === 'LOGIN' || screen === 'REGISTER') {
                 BackHandler.exitApp();
                 return true;
             } else if (screen === 'SPLASH') {
