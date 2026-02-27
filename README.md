@@ -88,7 +88,7 @@ Scan the QR code with the **Expo Go** app on your physical device, or press `a` 
 
 ---
 
-## 📦 Deployment
+## 📦 Deployment & Compiling
 
 **Backend:**
 The backend is completely containerized. You can deploy the included `Dockerfile` to any container-hosting service like Render, Railway, or AWS ECS. It automatically installs necessary system dependencies (like `ffmpeg`) and runs via `gunicorn`.
@@ -100,6 +100,18 @@ cd mobile
 npx eas-cli build --platform android --profile preview
 ```
 Make sure to configure `.easignore` to exclude `node_modules` for faster upload times.
+
+---
+
+## 🚀 Releases & Downloads
+
+### **v1.0.1 - Bug fixes & Stability updates**
+**Download APK:** [Smart Kisan v1.0.1](https://expo.dev/accounts/kousikreddy/projects/smart-kisan-mobile/builds/0e3ed936-cf80-4218-8b79-3c0cdb7d2848)
+
+**Release Notes:**
+- **Fixed Auto-Login Bug:** Mobile app sessions now persist correctly for 30 days. Fixed an issue where expired JWT tokens would silently fail network requests, preventing the History page from loading data on startup.
+- **Graceful Error Handling:** If an authentication token ever expires, the app no longer freezes; it gracefully intercepts the `401 Unauthorized` response and returns the user to the Login screen.
+- **API Connectivity:** Integrated live production deployment endpoints (Render).
 
 ---
 
