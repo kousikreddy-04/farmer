@@ -11,6 +11,10 @@ import xai_engine
 app = Flask(__name__)
 CORS(app)
 
+# --- KORE.AI API SERVICES ---
+from kore_api import kore as kore_blueprint
+app.register_blueprint(kore_blueprint)
+
 import os
 from dotenv import load_dotenv
 
@@ -336,11 +340,13 @@ def recommend_hybrid():
             user_id = None
 
         data = request.json
-        lat = data.get('lat')
-        lon = data.get('lon')
+        # Cast to float to handle string values sent by Kore.ai chatbot
+        try:
+            lat = float(data.get('lat', 20.59))
+            lon = float(data.get('lon', 78.96))
+        except (TypeError, ValueError):
+            lat, lon = 20.59, 78.96  # fallback: center of India
         image_base64 = data.get('image_base64')
-        
-        # ... (rest of logic unchanged until save)
 
         # 1. Weather
         weather = weather_service.get_current_weather(lat, lon)
@@ -573,18 +579,44 @@ def add_ledger():
     conn = get_db_connection()
     if not conn: return jsonify({"error": "DB Error"}), 500
     try:
-        cur = conn.cursor()
-        cur.execute("SELECT id FROM Cultivations WHERE user_id = %s AND status = 'ACTIVE' LIMIT 1", (user_id,))
+        cur = conn.cursor(cursor_factory=RealDictCursor)
+        cur.execute("SELECT id, crop_name FROM Cultivations WHERE user_id = %s AND status = 'ACTIVE' LIMIT 1", (user_id,))
         active = cur.fetchone()
         if not active:
-             return jsonify({"error": "No active cultivation"}), 400
-             
-        cur.execute("INSERT INTO Ledgers (cultivation_id, type, amount, category, notes) VALUES (%s, %s, %s, %s, %s)",
-                   (active[0], data['type'], data['amount'], data.get('category'), data.get('notes')))
+            return jsonify({"error": "No active cultivation"}), 400
+
+        cultivation_id = active['id']
+        crop_name = active['crop_name']
+
+        # Insert the new entry
+        cur.execute(
+            "INSERT INTO Ledgers (cultivation_id, type, amount, category, notes) VALUES (%s, %s, %s, %s, %s)",
+            (cultivation_id, data['type'], float(data['amount']), data.get('category', 'General'), data.get('notes', ''))
+        )
         conn.commit()
+
+        # Calculate running totals
+        cur.execute("SELECT COALESCE(SUM(amount), 0) AS total FROM Ledgers WHERE cultivation_id = %s AND type = 'PROFIT'", (cultivation_id,))
+        total_profit = float(cur.fetchone()['total'])
+
+        cur.execute("SELECT COALESCE(SUM(amount), 0) AS total FROM Ledgers WHERE cultivation_id = %s AND type = 'EXPENSE'", (cultivation_id,))
+        total_expense = float(cur.fetchone()['total'])
+
+        net = total_profit - total_expense
+
         cur.close()
         conn.close()
-        return jsonify({"status": "success"})
+        return jsonify({
+            "status": "success",
+            "crop_name": crop_name,
+            "entry_type": data['type'],
+            "entry_amount": float(data['amount']),
+            "entry_category": data.get('category', 'General'),
+            "total_profit": total_profit,
+            "total_expense": total_expense,
+            "net_profit": net,
+            "profit_status": "Profitable" if net >= 0 else "In Loss"
+        })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
