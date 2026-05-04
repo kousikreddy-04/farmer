@@ -591,7 +591,7 @@ def add_ledger():
         # Insert the new entry
         cur.execute(
             "INSERT INTO Ledgers (cultivation_id, type, amount, category, notes) VALUES (%s, %s, %s, %s, %s)",
-            (cultivation_id, data['type'], float(data['amount']), data.get('category', 'General'), data.get('notes', ''))
+            (cultivation_id, data['type'].upper(), float(data['amount']), data.get('category', 'General'), data.get('notes', ''))
         )
         conn.commit()
 
@@ -609,7 +609,7 @@ def add_ledger():
         return jsonify({
             "status": "success",
             "crop_name": crop_name,
-            "entry_type": data['type'],
+            "entry_type": data['type'].upper(),
             "entry_amount": float(data['amount']),
             "entry_category": data.get('category', 'General'),
             "total_profit": total_profit,
